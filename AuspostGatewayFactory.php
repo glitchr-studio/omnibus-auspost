@@ -7,7 +7,6 @@ use Omnibus\Auspost\Action\RatingAction;
 use Omnibus\Auspost\Action\ShippingAction;
 use Omnibus\Auspost\Action\TrackingAction;
 use Omnibus\Config;
-use Omnibus\Exception\InvalidConfigException;
 use Omnibus\GatewayFactory;
 use Symfony\Component\HttpClient\HttpClient;
 
@@ -31,7 +30,7 @@ final class AuspostGatewayFactory extends GatewayFactory
             'omnibus.required_options' => ['api_key', 'password', 'account_number'],
             'sandbox' => false,
             'omnibus.api' => function (Config $c) {
-                $http = $this->http ?? (class_exists(HttpClient::class) ? HttpClient::create() : throw new InvalidConfigException('The "auspost" gateway needs symfony/http-client.'));
+                $http = $this->http ?? HttpClient::create();
 
                 return new Api($http, (string) $c['api_key'], (string) $c['password'], (string) $c['account_number'], (bool) $c['sandbox']);
             },
